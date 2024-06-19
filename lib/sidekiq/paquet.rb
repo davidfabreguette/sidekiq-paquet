@@ -47,13 +47,13 @@ Sidekiq.configure_server do |config|
   end
 
   config.on(:startup) do
-    config.options[:paquet_flusher] = Sidekiq::Paquet::Flusher.new
+    Sidekiq.default_job_options[:paquet_flusher] = Sidekiq::Paquet::Flusher.new
     Concurrent::ScheduledTask.execute(Sidekiq::Paquet.initial_wait) {
-      config.options[:paquet_flusher].start
+      Sidekiq.default_job_options[:paquet_flusher].start
     }
   end
 
   config.on(:shutdown) do
-    config.options[:paquet_flusher].shutdown
+    Sidekiq.default_job_options[:paquet_flusher].shutdown
   end
 end
